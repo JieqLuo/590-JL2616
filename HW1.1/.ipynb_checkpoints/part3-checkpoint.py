@@ -8,11 +8,6 @@ from scipy.optimize import minimize
 import sys
 import os
 
-import decimal
-
-# Precision to use
-decimal.getcontext().prec = 100
-
 class Data():
     "class is used to do the whole MLworkflow for homework 1 part3"
     def __init__(self,path):
@@ -109,24 +104,6 @@ class Data():
         self.df=(self.df-self.df.mean())/self.df.std()
         return mu,sigma
 
-
-
-#     #Avoid RuntimeWarning: overflow encountered in exp
-#     def sigmoid(self,x,p):
-#         #Avoid RuntimeWarning: overflow encountered in exp
-#         #https://blog.csdn.net/dontla/article/details/106565725
-#         x_ravel = x.ravel()  # 将numpy数组展平
-#         length = len(x_ravel)
-#         y = []
-#         for index in range(length):
-#             if x_ravel[index] >= 0:
-#                 y.append(p[0]+p[1]*(1.0/(1.0+np.exp(-(x-p[2])/(p[3]+0.00001)))))
-#             else:
-#                 y.append(p[0]+p[1]*(np.exp(-(x-p[2])/(p[3]+0.00001))/(np.exp(-(x-p[2])/(p[3]+0.00001))+ 1)))
-#         print(x,np.array(y))
-#         return np.array(y).reshape(x.shape)
-
-
     #define model function for specific algorithms
     def model_method(self,x,p):
         if self.model_type=='logistic':
@@ -138,7 +115,7 @@ class Data():
 
     #Use scipy optimize minimize function to train the training dataset to optimize parameters
     def train_method(self):
-        np.random.seed(4)
+        np.random.seed(3)
         po=np.random.uniform(0.5,1.0,size=self.nfit)
         #train model using scipy optimizer
         res =minimize(self.loss_method,po, method='Nelder-Mead',tol=1e-15)
@@ -185,7 +162,9 @@ class Data():
             if y_label=='is_adult':
                 y_prob=self.model_method(self.x, self.popt)*self.y_sigma+self.y_mu
                 y_categ=(y_prob>=0.5).astype(int)
-                ax.plot(self.x*self.x_sigma+self.x_mu, y_categ , 'r-', label="Model")
+                denormalize_x=self.x*self.x_sigma+self.x_mu
+                sorted_x,sorted_y=zip(*sorted(zip(denormalize_x.tolist(), y_categ.tolist())))
+                ax.plot(sorted_x, sorted_y , 'r-', label="Model")
             else:
                 ax.plot(self.x*self.x_sigma+self.x_mu, self.model_method(self.x,self.popt)*self.y_sigma+self.y_mu , 'r-', label="Model")                
                 
