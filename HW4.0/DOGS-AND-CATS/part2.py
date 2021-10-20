@@ -1,26 +1,27 @@
 import os
 import shutil
+import numpy as np
+import matplotlib.pyplot as plt
 from keras import layers
 from keras import models
 from tensorflow.keras import optimizers
 from keras.preprocessing.image import ImageDataGenerator
-import matplotlib.pyplot as plt
 from keras.preprocessing import image
-import numpy as np
+
 
 
 #Copying images to training, validation, and test directories
-original_dataset_dir = os.getcwd()+'/kaggle'
-base_dir = os.getcwd()+'/'
+original_dataset_dir = '/home/jay/Desktop/kaggle/train'
+base_dir = os.getcwd()+'/cats_and_dogs_small'
 if not os.path.exists(base_dir):
     os.mkdir(base_dir)
-train_dir = os.path.join(base_dir, 'train/train')
+train_dir = os.path.join(base_dir, 'train')
 if not os.path.exists(train_dir):
     os.mkdir(train_dir)
 validation_dir = os.path.join(base_dir, 'validation')
 if not os.path.exists(validation_dir):
     os.mkdir(validation_dir)
-test_dir = os.path.join(base_dir, 'test/test1')
+test_dir = os.path.join(base_dir, 'test')
 if not os.path.exists(test_dir):
     os.mkdir(test_dir)
 train_cats_dir = os.path.join(train_dir, 'cats')
@@ -46,43 +47,43 @@ fnames = ['cat.{}.jpg'.format(i) for i in range(1000)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(train_cats_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 fnames = ['cat.{}.jpg'.format(i) for i in range(1000, 1500)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(validation_cats_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 fnames = ['cat.{}.jpg'.format(i) for i in range(1500, 2000)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(test_cats_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 fnames = ['dog.{}.jpg'.format(i) for i in range(1000)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(train_dogs_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 fnames = ['dog.{}.jpg'.format(i) for i in range(1000, 1500)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(validation_dogs_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 fnames = ['dog.{}.jpg'.format(i) for i in range(1500, 2000)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(test_dogs_dir, fname)
-    if not os.path.islink(dst):
-        os.symlink(src, dst)
+    shutil.copyfile(src, dst)
+
 
 #  Instantiating a small convnet for dogs vs. cats classification
 model = models.Sequential()
@@ -100,6 +101,7 @@ model.add(layers.Dropout(0.5))
 model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
+# /cats_and_dogs_small/train/cats/cat.456.jpg
 #Configuring the model for training
 model.compile(loss='binary_crossentropy',
               optimizer=optimizers.RMSprop(lr=1e-4), metrics=['acc'])
@@ -121,8 +123,8 @@ for data_batch, labels_batch in train_generator:
     break
 
 # Fitting the model using a batch generator
-history = model.fit_generator(train_generator, steps_per_epoch=20,
-                              epochs=3, validation_data=validation_generator,
+history = model.fit_generator(train_generator, steps_per_epoch=32,
+                              epochs=30, validation_data=validation_generator,
                               validation_steps=10)
 
 model.save('cats_and_dogs_small_1.h5')
