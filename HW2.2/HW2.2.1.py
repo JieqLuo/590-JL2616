@@ -17,10 +17,10 @@ IPLOT=True
 I_normalize=False
 
 PARADIGM='batch'
-with open('/home/jay/FAll-2021-590/590-CODES/DATA/planar_x1_x2_y.json') as json_file:
+with open('/home/jay/FAll-2021-590/590-CODES/DATA/planar_x1_x2_x3_y.json') as json_file:
 	input1=json.load(json_file)
 
-model_type="linear"; X_KEYS=['x1','x2']; Y_KEYS=['y'];NFIT=len(X_KEYS)+1
+model_type="logistic"; X_KEYS=['x1','x2']; Y_KEYS=['y'];NFIT=len(X_KEYS)+1
 
 #SAVE HISTORY FOR PLOTTING AT THE END
 epoch=1; epochs=[]; loss_train=[];  loss_val=[]
@@ -139,7 +139,7 @@ def minimizer(f,xi, algo='GD', LR=0.01):
 	iteration=1			#ITERATION COUNTER
 	dx=0.0001			#STEP SIZE FOR FINITE DIFFERENCE
 	max_iter=5000		#MAX NUMBER OF ITERATION
-	tol=10**-10			#EXIT AFTER CHANGE IN F IS LESS THAN THIS 
+	tol=10**-5		#EXIT AFTER CHANGE IN F IS LESS THAN THIS 
 	NDIM=len(xi)		#DIMENSION OF OPTIIZATION PROBLEM
 
 	#OPTIMIZATION LOOP

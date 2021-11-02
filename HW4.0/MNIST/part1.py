@@ -75,7 +75,7 @@ def preprocessing(dataset_name):
 #model build for ANN and CNN
 def model_build(dataset):
 	if not model_load:
-	    if dataset == 'mnist' or dataset == 'mnist Fashion':
+	    if dataset == 'mnist' or dataset == 'fashion_mnist':
 	        input_shape = (28, 28, 1)
 	    elif dataset == 'cifar10':
 	        input_shape = (32, 32, 3)
