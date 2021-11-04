@@ -7,27 +7,27 @@ labels = []
 texts = []
 
 
-def read_in_chunks(file_object, chunk_size=1024):
-    """Lazy function (generator) to read a file piece by piece.
-    Default chunk size: 1k."""
-    while True:
-        data = file_object.read(chunk_size)
-        if not data:
-            break
-        yield data
+# def read_in_chunks(file_object, chunk_size=1000):
+#     """Lazy function (generator) to read a file piece by piece.
+#     Default chunk size: 1k."""
+#     while True:
+#         data = file_object.read(chunk_size)
+#         if not data:
+#             break
+#         yield data
 
 for fname in os.listdir(novels_dir):
 	if fname[-4:] == '.txt':
 		with open(os.path.join(novels_dir, fname)) as f:
-		# 	for text in f.read().split("\n\n"):
-		# 		if len(text.split())>=10:
-		# 			texts.append(text)
-		# 			labels.append(fname[:-4])
-		# print(len(texts))
+			for text in f.read().split("\n\n"):
+				if len(text.split())>=10:
+					texts.append(text)
+					labels.append(fname[:-4])
+		print(len(texts))
 
-			for chunk in read_in_chunks(f):
-				texts.append(chunk)
-				labels.append(fname[:-4])
+			# for chunk in read_in_chunks(f):
+			# 	texts.append(chunk)
+			# 	labels.append(fname[:-4])
 
 # function to remove special characters
 def remove_special_characters(text):
@@ -67,7 +67,7 @@ for text in texts:
 	clean_texts.append(text)
 
 # print(texts[1:100])
-print(labels[1:100])
+print(len(texts))
 
 labels_map={"Fiander's Widow":0, "Monday or Tuesday":1,"The Castle of Otranto":2}
 # "The Romance of Lust":3,"The World of Chance":4
